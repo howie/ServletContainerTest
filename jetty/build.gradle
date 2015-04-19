@@ -1,0 +1,140 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    // plugin dependencies
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE"
+    }
+}
+
+apply plugin: 'war'
+apply plugin: 'spring-boot'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+
+bootRepackage {
+    mainClass = 'tw.howie.load.Application'
+}
+
+springBoot {
+    mainClass = 'tw.howie.load.Application'
+}
+
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+war {
+    baseName = 'jetty'
+}
+
+compileJava {
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("2g") // Set maximum memory to 4g
+}
+
+
+
+repositories {
+    maven { url 'http://repo.spring.io/milestone' }
+    maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'http://repo.maven.apache.org/maven2' }
+}
+
+
+dependencies {
+
+
+    compile group: 'commons-lang', name: 'commons-lang', version: commons_lang_version
+    compile group: 'commons-io', name: 'commons-io', version: commons_io_version
+    compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
+    compile group: 'javax.transaction', name: 'javax.transaction-api', version: javax_transaction_version
+
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: logback_version
+    compile group: 'ch.qos.logback', name: 'logback-core', version: logback_version
+    //for logback Conditional processing
+    compile group: 'org.codehaus.janino', name: 'janino', version: '2.7.8'
+
+    compile "org.springframework:spring-tx:${springVer}"
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-loader-tools', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: spring_boot_version
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
+        exclude module: 'jackson-databind'
+    }
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-client', version: '9.2.10.v20150310'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: spring_boot_version
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: jetty_version
+    compile group: 'org.eclipse.jetty', name: 'jetty-jmx', version: jetty_version
+
+    compile(group: 'org.springframework', name: 'spring-context-support') {
+        exclude(module: 'quartz')
+    }
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: 3.0
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}
+
+
+def webDir = "${projectDir}/src/main/resources/static"
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+
+if (project.hasProperty('prod')) {
+
+    bootRun {
+        args = ["--spring.profiles.active=prod"]
+    }
+    task setProdProperties(dependsOn: bootRun) << {
+        doFirst {
+            System.setProperty('spring.profiles.active', 'prod')
+        }
+    }
+
+
+} else if (project.hasProperty('stage')) {
+    bootRun {
+        args = ["--spring.profiles.active=stage"]
+    }
+    task setProdProperties(dependsOn: bootRun) << {
+        doFirst {
+            System.setProperty('spring.profiles.active', 'stage')
+        }
+    }
+
+} else {
+    bootRun {
+        args = ["--spring.profiles.active=dev"]
+    }
+    task setProdProperties(dependsOn: bootRun) << {
+        doFirst {
+            System.setProperty('spring.profiles.active', 'prod')
+        }
+    }
+
+}

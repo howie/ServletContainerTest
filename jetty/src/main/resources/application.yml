@@ -1,0 +1,30 @@
+# Disable the spring security default configuration from spring-boot-actuator
+management:
+    security:
+        enabled: false
+security:
+    basic:
+        enabled: false
+
+# Disable Jolokia - An http/json bridge for remote JMX access
+endpoints:
+    jolokia:
+        enabled: false
+
+
+spring:
+    mvc:
+        locale: en
+    freemarker:
+        mode: XHTML
+        cache: true
+        template_update_delay: 0
+        template-loader-path: classpath:/templates/
+
+server:
+    port: 8081
+
+jetty:
+    maxThreads: 500
+    minThreads: 50
+    idleTimeout: 10000
