@@ -11,6 +11,7 @@ endpoints:
     jolokia:
         enabled: false
 
+
 spring:
     mvc:
         locale: en
@@ -20,14 +21,12 @@ spring:
         template_update_delay: 0
         template-loader-path: classpath:/templates/
 
-
 server:
-    port: 8080
+    port: 8081
 
-tomcat:
-    maxThreads: 4096
-    acceptCount: 4096
-    protocol: org.apache.coyote.http11.Http11AprProtocol
-    #protocol: org.apache.coyote.http11.Http11NioProtocol
-    #protocol: org.apache.coyote.http11.Http11Nio2Protocol
+jetty:
+    maxThreads: 500
+    minThreads: 50
+    idleTimeout: 10000
 
+time: 500

@@ -1,0 +1,80 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    // plugin dependencies
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE"
+    }
+}
+
+apply plugin: 'war'
+apply plugin: 'spring-boot'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+
+bootRepackage {
+    mainClass = 'tw.howie.load.Application'
+}
+
+springBoot {
+    mainClass = 'tw.howie.load.Application'
+}
+
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+war {
+    baseName = 'jetty'
+}
+
+compileJava {
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("2g") // Set maximum memory to 4g
+}
+
+
+
+repositories {
+    maven { url 'http://repo.spring.io/milestone' }
+    maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'http://repo.maven.apache.org/maven2' }
+}
+
+
+dependencies {
+
+    compile project(':load-core')
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-client', version: '9.2.10.v20150310'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: spring_boot_version
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: jetty_version
+    compile group: 'org.eclipse.jetty', name: 'jetty-jmx', version: jetty_version
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}
+
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+
+

@@ -1,0 +1,46 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+
+    compile('com.google.guava:guava:18.0')
+    compile('org.apache.httpcomponents:fluent-hc:4.4.1')
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: 3.0
+
+    compile group: 'commons-lang', name: 'commons-lang', version: commons_lang_version
+    compile group: 'commons-io', name: 'commons-io', version: commons_io_version
+    compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
+    compile group: 'javax.transaction', name: 'javax.transaction-api', version: javax_transaction_version
+
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: logback_version
+    compile group: 'ch.qos.logback', name: 'logback-core', version: logback_version
+    //for logback Conditional processing
+    compile group: 'org.codehaus.janino', name: 'janino', version: '2.7.8'
+
+    compile "org.springframework:spring-tx:${springVer}"
+
+    compile(group: 'org.springframework', name: 'spring-context-support') {
+        exclude(module: 'quartz')
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-loader-tools', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: spring_boot_version
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
+        exclude module: 'jackson-databind'
+    }
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}

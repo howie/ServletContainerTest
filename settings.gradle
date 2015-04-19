@@ -1,4 +1,6 @@
 rootProject.name = 'ServletContainerTest'
 
-include 'jetty'
-include 'tomcat'
+include 'load-jetty'
+include 'load-tomcat'
+include 'load-core'
+
